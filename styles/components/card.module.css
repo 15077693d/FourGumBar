@@ -1,0 +1,10 @@
+.card_container{
+    border-radius: var(--radius);
+    padding: var(--big-gap);
+    background-color: white;
+    margin-bottom: var(--big-gap);
+}
+.card_description{
+    max-height: 100px;
+    overflow-y: hidden;
+}

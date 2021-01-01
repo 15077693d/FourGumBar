@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300&display=swap');
+:root {
+  --red: #FFB3B3;
+  --green: #B6FFC9;
+  --yellow: #F2E900;
+  --blue: #452ba0;
+  --backgroud-grey:#F2F4F5;
+  --usd-grey:#BCBDBE;
+  --normal-font-size:20px;
+  --big-font-size:30px;
+  --small-gap:10px;
+  --medium-gap:20px;
+  --big-gap:30px;
+  --bold-weight:900;
+  --normal-weight:200;
+  --radius:15px;
+}
+
+*,body {
+  font-family: 'Lato', sans-serif;
+  font-size: var(--normal-font-size);
+  margin: 0;
+  padding: 0;
+}
+
+a{
+  text-decoration: none;
+}
+
+button{
+  outline: none;
+  border:none;
+  padding: 5px 15px;
+}
