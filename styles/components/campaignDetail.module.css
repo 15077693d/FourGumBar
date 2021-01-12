@@ -1,0 +1,17 @@
+.active_btn {
+  color: var(--blue);
+  border-bottom: 3px solid var(--blue) !important;
+}
+
+.btn {
+  font-size: var(--small-font-size);
+  border-bottom: 3px solid transparent;
+}
+
+.content {
+  font-size: var(--small-font-size);
+  word-wrap: break-word;
+  max-height: 50%;
+  overflow: scroll;
+  min-height: 200px;
+}

@@ -40,9 +40,10 @@ describe('Campaign Factory Contract', () => {
     })
 
     it('getDeployedCampaigns get 1 address after createCampaign', async () => {
-        await campaignFactory.methods.createCampaign(minWei, category, description, title,targetWei).send({
+        const address = await campaignFactory.methods.createCampaign(minWei, category, description, title,targetWei).send({
             from: accounts[0], gas: 6721975, gasPrice: '30000000'
         });
+        console.log(address)
         const deployedCampaigns = await campaignFactory.methods.getDeployedCampaigns().call()
         campaign = await new web3.eth.Contract(JSON.parse(compliedCampaign['interface']), deployedCampaigns[0])
         campaignManager = await campaign.methods.manager().call()

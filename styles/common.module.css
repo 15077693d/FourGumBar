@@ -1,49 +1,91 @@
-.white_btn{
-    background-color: white;
-    color: black;
-    border-radius: 50px;
-    font-weight: 700;
+.white_btn {
+  background-color: white;
+  color: black;
+  border-radius: 50px;
+  font-weight: 700;
 }
 
-.yellow_btn{
-    background-color: var(--yellow);
-    color: black;
-    border-radius: 50px;
-    font-weight: 700;
+.yellow_btn {
+  background-color: var(--yellow);
+  color: black;
+  border-radius: 50px;
+  font-weight: 700;
 }
 
-.blue_big_btn{
-    font-size: var(--big-font-size);
-    padding: 10px 0!important;
-    color: white;
-    background-color: var(--blue);
-    width: 100%;
-    border-radius: var(--radius);
+.blue_big_btn {
+  font-size: var(--big-font-size);
+  padding: 10px 0 !important;
+  color: white;
+  background-color: var(--blue);
+  width: 100%;
+  border-radius: var(--radius);
+}
+.blue_big_btn:disabled{
+  opacity: 0.5;
+}
+.blue_btn {
+  color: white;
+  background-color: var(--blue);
+  border-radius: 50px;
 }
 
-.blue{
-    color: var(--blue);
+.blue {
+  color: var(--blue);
 }
 
-.grey{
-    color: var(--usd-grey);
+.grey {
+  color: var(--usd-grey);
+}
+.dark_grey {
+  color: var(--dark-grey);
 }
 
-.bold{
-    font-weight: 700;
+.bold {
+  font-weight: 700;
 }
 
-.space_between{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.mini_bold {
+  font-weight: 400;
 }
 
-.small_margin_bottom{
-    margin-bottom: var(--small-gap);
+.space_around {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.medium_margin_bottom{
-    margin-bottom: var(--medium-gap);
+.space_between {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.column_space_between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.small_margin_bottom {
+  margin-bottom: var(--small-gap);
+}
+
+.medium_margin_bottom {
+  margin-bottom: var(--medium-gap);
+}
+
+.overlay{
+  opacity: 0.4;
+  background-color: white;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.special_char{
+  background-color: rgb(245, 240, 240);
+  border-radius: var(--radius);
+  padding: var(--small-gap);
+  color: rgb(96, 96, 97);
 }

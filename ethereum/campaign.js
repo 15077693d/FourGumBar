@@ -1,54 +1,103 @@
 import web3 from './web3';
 import CampaignJson from './build/:Campaign.json';
-import instance from "../ethereum/factory"
+import factory from "../ethereum/factory"
+
+let theCampaign = (address) => new web3.eth.Contract(JSON.parse(CampaignJson.interface), address)
+async function getAccountBalance() {
+    const accounts = await web3.eth.getAccounts()
+    const weiBalance = await web3.eth.getBalance(accounts[0])
+    const ethBalance = await web3.utils.fromWei(weiBalance, 'ether');
+    return ethBalance
+}
+async function getCampaign(address) {
+    let [category, description, title, recentETH, minETH, approverCount, requestCount, manager, target] = Object.values(await theCampaign(address).methods.getSummary().call())
+    recentETH = web3.utils.fromWei(recentETH, 'ether')
+    minETH = web3.utils.fromWei(minETH, 'ether')
+    target = web3.utils.fromWei(target, 'ether')
+    return { category, description, title, recentETH, minETH, approverCount, requestCount, manager, target, address }
+}
+
+async function getContributions(address){
+    const accounts = await web3.eth.getAccounts()
+    const userAddresses =await theCampaign(address).methods.getApproverAddresses().call({
+        from:accounts[0]
+    })
+   const weiContributions = await Promise.all(userAddresses.map(userAddress =>
+        theCampaign(address).methods.approverContributions(userAddress).call({ from:accounts[0]})))
+    let contributions = []
+    for(let i=0;i<userAddresses.length;i++){
+        contributions.push({"地址":userAddresses[i],"金額ETH":web3.utils.fromWei(weiContributions[i],'ether')})
+    }
+    console.log(contributions)
+    return contributions
+}
+
+async function getCampaigns(category) {
+    const addresses = await getCampaignAddresses()
+    let campaigns = await Promise.all(
+        addresses.map(address =>
+            theCampaign(address).methods.getSummary().call())
+    )
+    campaigns = await Promise.all(campaigns.map((campaign, i) => {
+        let _campaign = Object.values(campaign)
+        _campaign[3] = web3.utils.fromWei(_campaign[3], 'ether')
+        _campaign[4] = web3.utils.fromWei(_campaign[4], 'ether')
+        _campaign[8] = web3.utils.fromWei(_campaign[8], 'ether')
+        _campaign.push(addresses[i])
+        const [category, description, title, recentETH, minETH, approverCount, requestCount, manager, target, address] = _campaign
+        return { category, description, title, recentETH, minETH, approverCount, requestCount, manager, target, address }
+    }).reverse())
+    if (category) {
+        return campaigns.filter(campaign => campaign.category === category)
+    } else {
+        return campaigns
+    }
+}
+
+async function getCampaignAddresses() {
+    const addresses = await factory.methods.getDeployedCampaigns().call()
+    return addresses
+}
+
 async function createCampaign(
-    minETH, category, description, title, targetETH
+    minETH, category, description, title, targetETH, setHash
 ) {
     const accounts = await web3.eth.getAccounts()
     const minWei = web3.utils.toWei(minETH, "ether")
     const targetWei = web3.utils.toWei(targetETH, "ether")
     return new Promise((resolve, reject) => {
-        instance.methods.createCampaign(minWei, category, description, title, targetWei).send({
+        factory.methods.createCampaign(minWei, category, description, title, targetWei).send({
             from: accounts[0]
         }).on('transactionHash', function (hash) {
-            console.log('transactionHash',hash);
-        }).on('receipt', function(receipt){
-            console.log("receipt",receipt)
+            console.log('transactionHash', hash);
+            setHash(hash)
+        }).on('receipt', function (receipt) {
+            console.log("receipt", receipt)
             resolve(receipt)
-        }).on('error', function(error){
-            console.log("error",error)
+        }).on('error', function (error) {
             reject(error)
         });
     })
-
 }
 
-class Campaign {
-    constructor(address) {
-        this.address = address
-        this.instance = new web3.eth.Contract(
-            JSON.parse(CampaignJson.interface),
-            address
-        );
-    }
-
-    async getCampaigns() {
-        const category = await this.instance.methods.category().call()
-        const description = await this.instance.methods.description().call()
-        const title = await this.instance.methods.title().call()
-        let targetWei = await this.instance.methods.target().call()
-        let minWei = await this.instance.methods.minimumContribution().call()
-        let target = Number(web3.utils.fromWei(targetWei))
-        let minETH = Number(web3.utils.fromWei(minWei))
-        const recentETH = Number(web3.utils.fromWei(await web3.eth.getBalance(this.address)))
-        return {
-            category,
-            description,
-            title,
-            target,
-            minETH,
-            recentETH
-        }
-    }
+async function contribute(eth, campaignAddress,setHash) {
+    const wei = web3.utils.toWei(String(eth), "ether")
+    const accounts = await web3.eth.getAccounts()
+    const account = accounts[0]
+    return new Promise((resolve, reject)=>{ theCampaign(campaignAddress).methods.contribute().send(
+        {
+            value: wei,
+            from: account
+        }).on('transactionHash', function (hash) {
+            console.log('transactionHash', hash);
+            setHash(hash)
+        }).on('receipt', function (receipt) {
+            console.log("receipt", receipt)
+            resolve(receipt)
+        }).on('error', function (error) {
+            reject(error)
+        });
+    })
 }
-export { Campaign, createCampaign };
+
+export { createCampaign, getCampaignAddresses, getCampaigns, getAccountBalance, getCampaign, contribute, getContributions};

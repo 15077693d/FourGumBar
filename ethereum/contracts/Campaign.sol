@@ -14,10 +14,18 @@ contract CampaignFactory {
         string _description,
         string _title,
         uint256 _targetWei
-    ) public {
+    ) public returns (address) {
         address newCampaign =
-            new Campaign(_minWei, msg.sender, _category, _description, _title,_targetWei);
+            new Campaign(
+                _minWei,
+                msg.sender,
+                _category,
+                _description,
+                _title,
+                _targetWei
+            );
         deployedCampaigns.push(newCampaign);
+        return newCampaign;
     }
 
     function getDeployedCampaigns() public view returns (address[]) {
@@ -27,7 +35,6 @@ contract CampaignFactory {
 
 contract Campaign {
     struct Request {
-        string id;
         string name;
         string description;
         uint256 value;
@@ -43,9 +50,10 @@ contract Campaign {
     uint256 public minimumContribution;
     mapping(address => bool) public approvers;
     uint256 public approverCount;
-    mapping(string => Request) requests;
-    uint256 public requestCount;
+    Request[] public requests;
     uint256 public target;
+    mapping(address => uint256) public approverContributions;
+    address[] public approverAddresses;
 
     function Campaign(
         uint256 minWei,
@@ -64,42 +72,37 @@ contract Campaign {
         target = targetWei;
     }
 
-    function getRequestApproverCount(string id) public view returns (uint256) {
+    function getRequestApproverCount(uint256 id) public view returns (uint256) {
         return requests[id].approvalCount;
     }
 
-    function getRequestStatus(string id) public view returns (bool) {
+    function getRequestStatus(uint256 id) public view returns (bool) {
         return requests[id].complete;
     }
 
     function contribute() public payable {
-        require(msg.value > minimumContribution);
+        require(msg.value >= minimumContribution);
         address approver = msg.sender;
+        if (!approvers[approver]){
+             approverAddresses.push(approver);
+        }
         approvers[approver] = true;
         approverCount += 1;
+        approverContributions[approver]+=msg.value;
     }
 
     function createRequest(
-        string id,
         string name,
         string _description,
         uint256 value,
         address recipient
-    ) public restricted {
+    ) public restricted returns (uint256) {
         require(value < this.balance);
-        requests[id] = Request(
-            id,
-            name,
-            _description,
-            value,
-            recipient,
-            false,
-            0
-        );
-        requestCount += 1;
+        requests.push(Request(name, _description, value, recipient, false, 0));
+        return requests.length;
     }
 
-    function approveRequest(string id) public {
+    function approveRequest(uint256 id) public {
         Request storage request = requests[id];
         require(approvers[msg.sender]);
         require(!request.approvals[msg.sender]);
@@ -107,12 +110,73 @@ contract Campaign {
         request.approvalCount += 1;
     }
 
-    function finalizeRequest(string id) public restricted {
+    function finalizeRequest(uint256 id) public restricted {
         Request storage request = requests[id];
         require(request.complete == false);
         require(request.approvalCount > approverCount / 2);
         request.recipient.transfer(request.value);
         request.complete = true;
+    }
+
+    function getRequestSummary(uint256 id)
+        public
+        view
+        returns (
+            string,
+            string,
+            uint256,
+            address,
+            bool,
+            uint256,
+            uint256
+        )
+    {
+        Request storage request = requests[id];
+        return (
+            request.name,
+            request.description,
+            request.value,
+            request.recipient,
+            request.complete,
+            request.approvalCount,
+            approverCount
+        );
+    }
+
+    function getRequestCount() public view returns (uint256) {
+        return requests.length;
+    }
+    
+    function getApproverAddresses() public view returns (address[]) {
+        return approverAddresses;
+    }
+
+    function getSummary()
+        public
+        view
+        returns (
+            string,
+            string,
+            string,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address,
+            uint256
+        )
+    {
+        return (
+            category,
+            description,
+            title,
+            this.balance,
+            minimumContribution,
+            approverCount,
+            getRequestCount(),
+            manager,
+            target
+        );
     }
 
     modifier restricted() {

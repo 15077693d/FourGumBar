@@ -1,5 +1,9 @@
 .form_container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   box-sizing: content-box;
+  justify-content: space-between;
   margin: 0 -30px;
   background-color: white;
   padding: var(--small-gap) var(--big-gap);
@@ -7,9 +11,7 @@
   border-top-right-radius: var(--radius);
   margin-bottom: -30px;
   padding-bottom: 20px;
-  height:75vh;
 }
-
 
 .form_input {
   background-color: white;
@@ -20,7 +22,7 @@
   width: 100%;
   outline: none;
   padding: var(--small-gap);
-  border: 1px solid var(--usd-grey);
+  border: 2px solid #bcbdbe42;
   border-radius: var(--radius);
 }
 
@@ -35,12 +37,11 @@
 
   outline: none;
   padding: var(--small-gap);
-  border: 1px solid var(--usd-grey);
+  border: 2px solid #bcbdbe42;
   border-radius: var(--radius);
 }
 
-.loading{
-  height: 60vh;
+.loading {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -48,7 +49,6 @@
   align-items: center;
 }
 
-
-.loading div{
+.loading div {
   margin: var(--small-gap);
 }

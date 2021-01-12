@@ -1,0 +1,43 @@
+.pay_pad {
+  padding:var(--big-gap);
+  position: absolute;
+  width:100%;
+  bottom: 0px;
+  min-height: 30vh;
+  background-color: var(--backgroud-grey);
+  border-radius: var(--radius);
+  margin: -30px -30px;
+  border-top: 2px solid var(--usd-grey);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bar_shape {
+  background-color: var(--usd-grey);
+  height: 3px;
+  width: 50px;
+  border-radius: 50px;
+}
+
+
+.pay_pad_value * {
+  font-size: var(--big-font-size);
+  font-weight: 700;
+}
+
+.pay_pad_value div{
+  width:185px
+}
+.pay_pad_value {
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pay_pad_value input {
+  outline: none;
+  border: none;
+  background-color: var(--grey);
+  width: 50%;
+}
+

@@ -1,6 +1,7 @@
 .layout{
     box-sizing: border-box;
     padding: var(--big-gap);
+    padding-bottom: 0;
     background-color: var(--backgroud-grey);
     min-height: 100vh;
 }
