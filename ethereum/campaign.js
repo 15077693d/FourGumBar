@@ -1,5 +1,5 @@
 import web3 from './web3';
-import CampaignJson from './build/:Campaign.json';
+import CampaignJson from './build/Campaign.json';
 import factory from "../ethereum/factory"
 
 let theCampaign = (address) => new web3.eth.Contract(JSON.parse(CampaignJson.interface), address)
