@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../components/layout'
 import { getCampaign } from '../../ethereum/campaign'
-import CampaignNode from '../../components/index/campaign'
+import CampaignNode from '../../components/campaign/campaign'
 const index = (campaign) => {
     return (
         <Layout>

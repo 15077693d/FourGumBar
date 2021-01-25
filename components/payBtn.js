@@ -5,19 +5,22 @@ import { useState } from 'react';
 import useProcess from '../hooks/useProcess' 
 import { contribute } from '../ethereum/campaign'
 import ProcessingNodes from '../components/processNodes'
-const PayBtn = ({ setRecentETH,recentETH, minETH, active, setActive, campaignAddress,renewCampaign }) => {
+const PayBtn = ({renewContributions,setRecentETH,recentETH, minETH, active, setActive, campaignAddress,renewCampaign }) => {
     const { status,hash,setHash,setStatus} = useProcess()
     const [eth, setETH] = useState(minETH)
     async function handleSubmit (e) {
+        let userETH = Number(document.getElementById('userETH').textContent.split(' ')[0]) - Number(eth)
         e.preventDefault();
         setStatus('confirmed')
         try{
             await contribute(eth, campaignAddress,setHash)
             if (renewCampaign){
-                await renewCampaign(campaignAddress)
+                renewCampaign(campaignAddress)
             }
             setRecentETH(Number(eth)+Number(recentETH))
             setStatus('succeed')
+            renewContributions()
+            document.getElementById('userETH').textContent = `${userETH.toFixed(2)} ETH`
         }catch (e){
             console.log(e)
             setStatus("error")

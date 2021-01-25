@@ -89,3 +89,9 @@
   padding: var(--small-gap);
   color: rgb(96, 96, 97);
 }
+
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

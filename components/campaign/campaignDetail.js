@@ -1,25 +1,27 @@
 import React from 'react';
-import { grey, space_between, bold, medium_margin_bottom, special_char, column_space_between } from '../styles/common.module.css'
-import { active_btn, btn, content } from '../styles/components/campaignDetail.module.css'
+import { grey, space_between, bold, medium_margin_bottom, special_char, center } from '../../styles/common.module.css'
+import { active_btn, btn, content } from '../../styles/components/campaignDetail.module.css'
 import { useState } from 'react';
-import Table from '../components/table'
-const CampaignDetail = ({ campaign }) => {
+import Table from '../table';
+import {contribution_table} from '../../styles/components/table.module.css'
+const CampaignDetail = ({ campaign, contributions }) => {
     const { description, address, minETH, manager } = campaign
     const idContentPair = {
         a: description,
-        b: <div style={{height:130,textAlign:"center"}} className={column_space_between}>
-            <div>點擊查閱項目記帳本</div>
-            <div className={special_char}>
+        b: <div style={{height:130}} className={center}>
+            <div style={{width:"90%"}} className={special_char}>
             <a href={`https://rinkeby.etherscan.io/address/${address}`} target="_blank">{address}</a>
             </div>
         </div>,
-        c: <div style={{textAlign:"center"}} className={special_char}>{minETH} ETH</div>
+        c: <div style={{height:130}} className={center}>
+        <div style={{textAlign:"center",width:"90%"}} className={special_char}>
+        {minETH} ETH</div>
+        </div>
         ,
-        d: <Table/>,
-        e: <div  style={{height:130,textAlign:"center"}} className={column_space_between}>
-        <div>點擊查閱管理人記帳本</div>
-        <div className={special_char}>
-        <a href={`https://rinkeby.etherscan.io/address/${manager}`} target="_blank">{address}</a>
+        d: <Table className={contribution_table} data={contributions} columns={['地址','金額ETH']}/>,
+        e: <div  style={{height:130}} className={center}>
+        <div style={{width:"90%"}} className={special_char}>
+        <a href={`https://rinkeby.etherscan.io/address/${manager}`} target="_blank">{manager}</a>
         </div>
     </div>
 

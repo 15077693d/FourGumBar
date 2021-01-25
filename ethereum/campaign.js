@@ -9,6 +9,11 @@ async function getAccountBalance() {
     const ethBalance = await web3.utils.fromWei(weiBalance, 'ether');
     return ethBalance
 }
+
+async function getCampaignBudgets(address) {
+    const num_of_budget = await theCampaign(address).methods.getRequestCount()
+    console.log(num_of_budget)
+}
 async function getCampaign(address) {
     let [category, description, title, recentETH, minETH, approverCount, requestCount, manager, target] = Object.values(await theCampaign(address).methods.getSummary().call())
     recentETH = web3.utils.fromWei(recentETH, 'ether')
@@ -17,18 +22,17 @@ async function getCampaign(address) {
     return { category, description, title, recentETH, minETH, approverCount, requestCount, manager, target, address }
 }
 
-async function getContributions(address){
+async function getContributions(address) {
     const accounts = await web3.eth.getAccounts()
-    const userAddresses =await theCampaign(address).methods.getApproverAddresses().call({
-        from:accounts[0]
+    const userAddresses = await theCampaign(address).methods.getApproverAddresses().call({
+        from: accounts[0]
     })
-   const weiContributions = await Promise.all(userAddresses.map(userAddress =>
-        theCampaign(address).methods.approverContributions(userAddress).call({ from:accounts[0]})))
+    const weiContributions = await Promise.all(userAddresses.map(userAddress =>
+        theCampaign(address).methods.approverContributions(userAddress).call({ from: accounts[0] })))
     let contributions = []
-    for(let i=0;i<userAddresses.length;i++){
-        contributions.push({"地址":userAddresses[i],"金額ETH":web3.utils.fromWei(weiContributions[i],'ether')})
+    for (let i = 0; i < userAddresses.length; i++) {
+        contributions.push({ "地址": userAddresses[i], "金額ETH": web3.utils.fromWei(weiContributions[i], 'ether') })
     }
-    console.log(contributions)
     return contributions
 }
 
@@ -59,6 +63,20 @@ async function getCampaignAddresses() {
     return addresses
 }
 
+async function waitUntilDone(transactionHash, resolve) {
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    while (true) {
+        const receipt = await web3.eth.getTransactionReceipt(transactionHash);
+        await sleep(2000);
+        if (receipt) {
+            resolve(receipt)
+            break
+        }
+    }
+}
+
 async function createCampaign(
     minETH, category, description, title, targetETH, setHash
 ) {
@@ -68,7 +86,7 @@ async function createCampaign(
     return new Promise((resolve, reject) => {
         factory.methods.createCampaign(minWei, category, description, title, targetWei).send({
             from: accounts[0]
-        }).on('transactionHash', function (hash) {
+        }, async function (error, transactionHash) { await waitUntilDone(transactionHash, resolve) }).on('transactionHash', function (hash) {
             console.log('transactionHash', hash);
             setHash(hash)
         }).on('receipt', function (receipt) {
@@ -76,28 +94,33 @@ async function createCampaign(
             resolve(receipt)
         }).on('error', function (error) {
             reject(error)
-        });
+        }).on('confirmation', function (confirmationNumber, receipt) {
+            console.log(confirmationNumber)
+            console.log(receipt)
+        }
+        );
     })
 }
 
-async function contribute(eth, campaignAddress,setHash) {
+async function contribute(eth, campaignAddress, setHash) {
     const wei = web3.utils.toWei(String(eth), "ether")
     const accounts = await web3.eth.getAccounts()
     const account = accounts[0]
-    return new Promise((resolve, reject)=>{ theCampaign(campaignAddress).methods.contribute().send(
-        {
-            value: wei,
-            from: account
-        }).on('transactionHash', function (hash) {
-            console.log('transactionHash', hash);
-            setHash(hash)
-        }).on('receipt', function (receipt) {
-            console.log("receipt", receipt)
-            resolve(receipt)
-        }).on('error', function (error) {
-            reject(error)
-        });
+    return new Promise((resolve, reject) => {
+        theCampaign(campaignAddress).methods.contribute().send(
+            {
+                value: wei,
+                from: account
+            }, async function (error, transactionHash) { await waitUntilDone(transactionHash, resolve) }).on('transactionHash', function (hash) {
+                console.log('transactionHash', hash);
+                setHash(hash)
+            }).on('receipt', function (receipt) {
+                console.log("receipt", receipt)
+                resolve(receipt)
+            }).on('error', function (error) {
+                reject(error)
+            });
     })
 }
 
-export { createCampaign, getCampaignAddresses, getCampaigns, getAccountBalance, getCampaign, contribute, getContributions};
+export { getCampaignBudgets, createCampaign, getCampaignAddresses, getCampaigns, getAccountBalance, getCampaign, contribute, getContributions };

@@ -3,8 +3,8 @@ import {useState} from 'react'
 import Layout from "../components/layout"
 import { getCampaigns } from '../ethereum/campaign';
 import useCampaigns from '../hooks/useCampaign'
-import CampaignsNode from '../components/index/campaigns'
-import CampaignNode from '../components/index/campaign'
+import CampaignsNode from '../components/campaign/campaigns'
+import CampaignNode from '../components/campaign/campaign'
 export async function getStaticProps() {
     // Get external data from the file system, API, DB, etc.
     const campaigns = await getCampaigns()

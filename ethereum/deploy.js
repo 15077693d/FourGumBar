@@ -13,7 +13,7 @@ const deploy = async () => {
     console.log('Attempting to deploy from account: ', accounts[0])
     let campaignFactory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
         .deploy({ data: compiledFactory.bytecode })
-        .send({ gas: '10000000', from: accounts[0] })
+        .send({ gas: '20000000', from: accounts[0] })
         .on('transactionHash', function (hash) {
             console.log(hash);
         })

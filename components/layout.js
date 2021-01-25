@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from '../routes';
 import { layout, logo, add_btn, eth_price, usd_price, prices } from "../styles/components/layout.module.css";
 import { space_between, medium_margin_bottom } from '../styles/common.module.css'
-import CreateCampaignForm from '../components/createCampaignForm'
+import CreateCampaignForm from './campaign/createCampaignForm'
 import { useEffect, useState } from 'react'
 import useBalance from '../hooks/useBalance'
 const Layout = ({ children, renewCampaigns, _balance }) => {
@@ -31,7 +31,7 @@ const Layout = ({ children, renewCampaigns, _balance }) => {
                     </button>
                 </div>
                 <div className={prices}>
-                    <span className={eth_price}>{String(balance).substr(0, 5)} ETH</span>
+                    <span id="userETH" className={eth_price}>{balance==='XXX'?"XXX":String(Number(balance).toFixed(2))} ETH</span>
                     <span className={usd_price}>/ XXXX USD</span>
                 </div>
             </div>

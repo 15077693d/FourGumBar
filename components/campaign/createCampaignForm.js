@@ -1,18 +1,21 @@
 import React from 'react';
-import { column_space_between, blue_btn, space_between, bold, blue, blue_big_btn, medium_margin_bottom } from '../styles/common.module.css'
-import { form_input, form_textarea, form_container } from '../styles/components/createCampaignForm.module.css'
-import { createCampaign, getCampaignAddresses } from "../ethereum/campaign"
-import useCampaignForm from '../hooks/useCampaignForm'
-import ProcessingNodes from './processNodes'
-import useProcess from '../hooks/useProcess'
+import { column_space_between, blue_btn, space_between, bold, blue, blue_big_btn, medium_margin_bottom } from '../../styles/common.module.css'
+import { form_input, form_textarea, form_container } from '../../styles/components/createCampaignForm.module.css'
+import { createCampaign, getCampaignAddresses } from "../../ethereum/campaign"
+import useForm from '../../hooks/useForm'
+import ProcessingNodes from '../processNodes'
+import useProcess from '../../hooks/useProcess'
 const CreateCampaignForm = ({ renewCampaigns, handleClickAdd, renewBalance }) => {
    const { status,address,setAddress,hash,setHash,setStatus} = useProcess()
-    const { title,category,minETH,targetETH,description,setFormInput, resetFormInputs} = useCampaignForm()
+    const { title,category,minETH,targetETH,description,setFormInput, resetFormInputs} = useForm({
+        title:"",category:"",minETH:"",targetETH:"",description:""
+    })
     async function handleSubmit(e) {
         e.preventDefault()
         setStatus("confirmed")
         try {
             await createCampaign(minETH, category, description, title, targetETH, setHash)
+            console.log(123)
             if (renewCampaigns) {
                 let [b, c, addresses] = await Promise.all(
                     [
