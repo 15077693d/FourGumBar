@@ -6,8 +6,8 @@ const Web3 = require('web3');
 const { request } = require('https');
 const { error } = require('console');
 const web3 = new Web3(ganache.provider());
-const campaignFactoryPath = path.resolve(__dirname, "..", "ethereum", "build", ":CampaignFactory.json");
-const campaignPath = path.resolve(__dirname, "..", "ethereum", "build", ":Campaign.json");
+const campaignFactoryPath = path.resolve(__dirname, "..", "ethereum", "build", "CampaignFactory.json");
+const campaignPath = path.resolve(__dirname, "..", "ethereum", "build", "Campaign.json");
 const compliedCampaignFactory = fs.readJSONSync(campaignFactoryPath)
 const compliedCampaign = fs.readJSONSync(campaignPath)
 let campaignFactory;

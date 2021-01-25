@@ -6,7 +6,7 @@ import { form_container } from '../../styles/components/createCampaignForm.modul
 import EthBar from '../ethBar'
 import CampaignDetail from './campaignDetail'
 import PayBtn from '../payBtn'
-import { getContributions } from '../../ethereum/campaign'
+import { getContributions, getCampaignBudgets } from '../../ethereum/campaign'
 import BudgetItem from '../budget/budgetItem'
 import CreateBudgetForm from '../budget/createBudgetForm'
 import BudgetDetail from '../budget/budgetDetail'
@@ -34,28 +34,33 @@ export const CampaignDetailNode = ({ setPage, campaign, renewCampaign, setActive
     </div>
 }
 
-export const BudgetsNode = ({ isManager, setPage, handleClickBudget, budgets }) => {
+export const BudgetsNode =  ({ isManager, setPage, handleClickBudget, address }) => {
+    const [budgets, setBudgets] = useState([])
+    useEffect(async ()=>{
+        setBudgets(await getCampaignBudgets(address))
+    },[])
     return <div className={`${form_container}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>支岀預算</span>
             <button onClick={() => setPage('details')} className={blue_btn}>返回</button>
         </div>
         <div className={budgetItems}>
-            {budgets.map(budget =>
-                <BudgetItem handleClick={() => handleClickBudget(budget)} budget={budget} />)}
+            {budgets.map((budget,i) =>
+                <BudgetItem key={i} handleClick={() => handleClickBudget(budget)} budget={budget} />)}
         </div>
         <button onClick={() => setPage('addBudgets')} className={blue_big_btn} >增加預算</button>
     </div>
 }
 
 
-export const AddBudgetNode = ({ setPage }) => {
+export const AddBudgetNode = ({ setPage,manager,campaignAddress }) => {
+    console.log(manager)
     return <div className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>增加支岀預算</span>
             <button onClick={() => setPage('budgets')} className={blue_btn}>返回</button>
         </div>
-        <CreateBudgetForm />
+        <CreateBudgetForm manager={manager} campaignAddress={campaignAddress}/>
     </div>
 }
 
@@ -63,7 +68,7 @@ export const AddBudgetNode = ({ setPage }) => {
 export const BudgetDetailNode = ({ budget, setPage }) => {
     return <div className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
-            <span className={`${bold} ${blue}`}>test</span>
+            <span className={`${bold} ${blue}`}>{budget.item}</span>
             <button onClick={() => setPage("budgets")} className={blue_btn}>返回</button>
         </div>
         <BudgetDetail budget={budget} />

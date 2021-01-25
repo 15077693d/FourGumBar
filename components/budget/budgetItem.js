@@ -9,7 +9,7 @@ const BudgetItem = ({budget, handleClick}) => {
             <div className={title}>
                 {item}
             </div>
-            <div class={right} style={
+            <div className={right} style={
                 {backgroundColor:pass?"#C5F8C9":"#F5B9B6"}
             }>
                 <p className="eth">{eth} ETH</p>

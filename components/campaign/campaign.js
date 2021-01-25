@@ -25,19 +25,16 @@ const Campagin = ({ setSelectedCampaign, campaign, renewCampaign }) => {
         setPage("budgetDetails")
         setBudget(budget)
     }
-
     let pageNode;
     switch (page) {
         case "details":
             pageNode = <CampaignDetailNode setPage={setPage} handleBack={handleBackHome} active={active} campaign={campaign} renewCampaign={renewCampaign} setActive={setActive} />
             break;
         case "budgets":
-            pageNode = <BudgetsNode setPage={setPage} handleClickBudget={handleClickBudget} budgets={
-                [{ item: "test", eth: "1.00", amount: 12, total: 20, pass: true, address: "123", description: "test123" },{ item: "test", eth: "1.00", amount: 12, total: 20, pass: true, address: "123", description: "test123" }]
-            } />
+            pageNode = <BudgetsNode setPage={setPage} handleClickBudget={handleClickBudget} address={campaign.address} />
             break;
         case "addBudgets":
-            pageNode = <AddBudgetNode setPage={setPage} />
+            pageNode = <AddBudgetNode setPage={setPage} manager={campaign.manager} campaignAddress={campaign.address}/>
             break;
         case "budgetDetails":
             pageNode = <BudgetDetailNode budget={currectBudget} setPage={setPage} />

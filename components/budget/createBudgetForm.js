@@ -3,9 +3,29 @@ import { column_space_between,  blue_big_btn, medium_margin_bottom } from '../..
 import { form_input, form_textarea, form_container } from '../../styles/components/createCampaignForm.module.css'
 import ProcessingNodes from '../processNodes'
 import useForm from '../../hooks/useForm'
-const createBudgetForm = () => {
+import { addCampaignBudget } from '../../ethereum/campaign'
+import useProcess from '../../hooks/useProcess'
+const createBudgetForm = ({manager,campaignAddress}) => {
+    const processData= useProcess()
+    const { status,setAddress,hash,setHash,setStatus} = processData
+    const finalAddress=processData.address
+
     const { name,amount,address,description,setFormInput, resetFormInputs} = useForm({name:"",amount:"",address:"",description:""})
-    const formNode = <form className={column_space_between}>
+    async function handleSubmit(e) {
+        e.preventDefault()
+        setStatus("confirmed")
+        try {
+            await addCampaignBudget(campaignAddress,{name,value:amount,recipient:address,description},manager,setHash)
+            setStatus("succeed")
+            resetFormInputs()
+        } catch (error) {
+            console.log(error)
+            setStatus("error")
+        }
+    }
+    
+   
+    const formNode = <form className={column_space_between} onSubmit={handleSubmit}>
     <div>
         <input onChange={(e) => setFormInput('name',e.target.value)} value={name} className={form_input} type="text" placeholder="預算名稱" required />
         <input onChange={(e) => setFormInput('amount',e.target.value)} value={amount} className={form_input} step="0.01" type="number" placeholder="預算金額" required />
@@ -17,9 +37,10 @@ const createBudgetForm = () => {
 
 return (
     <div className={form_container}>
-        {/* <ProcessingNodes address={address} basedNode={formNode}  status={status}  hash={hash} clickConfirmed={()=>{setStatus("based");handleClickAdd();}} />
-         */}
-         {formNode}
+        <div></div>
+        <ProcessingNodes address={finalAddress} basedNode={formNode}  status={status}  hash={hash} 
+        clickConfirmed={()=>{setStatus("based");}} />
+         <div></div>
     </div>
 );
 };
