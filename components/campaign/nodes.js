@@ -6,12 +6,12 @@ import { form_container } from '../../styles/components/createCampaignForm.modul
 import EthBar from '../ethBar'
 import CampaignDetail from './campaignDetail'
 import PayBtn from '../payBtn'
-import { getContributions, getCampaignBudgets } from '../../ethereum/campaign'
+import { getContributions } from '../../ethereum/campaign'
 import BudgetItem from '../budget/budgetItem'
 import CreateBudgetForm from '../budget/createBudgetForm'
 import BudgetDetail from '../budget/budgetDetail'
 
-export const CampaignDetailNode = ({ setPage, campaign, renewCampaign, setActive, handleBack, active }) => {
+export const CampaignDetailNode = ({ style,setPage, campaign, renewCampaign, setActive, handleBack, active }) => {
     let { category, title, target, minETH, address } = campaign
     const [recentETH, setRecentETH] = useState(campaign.recentETH)
     const [contributions, setContributions] = useState(null)
@@ -21,7 +21,7 @@ export const CampaignDetailNode = ({ setPage, campaign, renewCampaign, setActive
     useEffect(() => {
         renewContributions()
     }, [])
-    return <div className={`${form_container} ${column_space_between}`}>
+    return <div style={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>{category}</span>
             <button onClick={() => setPage('budgets')} className={yellow_btn}>支岀預算</button>
@@ -34,12 +34,8 @@ export const CampaignDetailNode = ({ setPage, campaign, renewCampaign, setActive
     </div>
 }
 
-export const BudgetsNode =  ({ isManager, setPage, handleClickBudget, address }) => {
-    const [budgets, setBudgets] = useState([])
-    useEffect(async ()=>{
-        setBudgets(await getCampaignBudgets(address))
-    },[])
-    return <div className={`${form_container}`}>
+export const BudgetsNode =  ({style, isManager, setPage, handleClickBudget, budgets }) => {
+    return <div style ={style} className={`${form_container}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>支岀預算</span>
             <button onClick={() => setPage('details')} className={blue_btn}>返回</button>
@@ -53,20 +49,19 @@ export const BudgetsNode =  ({ isManager, setPage, handleClickBudget, address })
 }
 
 
-export const AddBudgetNode = ({ setPage,manager,campaignAddress }) => {
-    console.log(manager)
-    return <div className={`${form_container} ${column_space_between}`}>
+export const AddBudgetNode = ({style, appendBudgets, setPage,manager,campaignAddress }) => {
+    return <div style ={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>增加支岀預算</span>
             <button onClick={() => setPage('budgets')} className={blue_btn}>返回</button>
         </div>
-        <CreateBudgetForm manager={manager} campaignAddress={campaignAddress}/>
+        <CreateBudgetForm setPage={setPage} appendBudgets={appendBudgets} manager={manager} campaignAddress={campaignAddress}/>
     </div>
 }
 
 
-export const BudgetDetailNode = ({ budget, setPage }) => {
-    return <div className={`${form_container} ${column_space_between}`}>
+export const BudgetDetailNode = ({style, budget, setPage}) => {
+    return <div style ={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>{budget.item}</span>
             <button onClick={() => setPage("budgets")} className={blue_btn}>返回</button>

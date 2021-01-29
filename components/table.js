@@ -7,7 +7,7 @@ function Table({data, columns, className}) {
   )
   const dataNode = data.map(item => 
     <tr>
-      {columns.map(column => <td>{item[column]}</td>)}
+      {columns.map(column => <td key={column}>{item[column]}</td>)}
     </tr>
   )
   return <table className={className}>

@@ -15,7 +15,6 @@ const CreateCampaignForm = ({ renewCampaigns, handleClickAdd, renewBalance }) =>
         setStatus("confirmed")
         try {
             await createCampaign(minETH, category, description, title, targetETH, setHash)
-            console.log(123)
             if (renewCampaigns) {
                 let [b, c, addresses] = await Promise.all(
                     [

@@ -10,6 +10,15 @@ async function getAccountBalance() {
   const ethBalance = await web3.utils.fromWei(weiBalance, 'ether')
   return ethBalance
 }
+let approveRequest = async (address, id) => {
+  console.log(address)
+  const accounts = await web3.eth.getAccounts()
+  await theCampaign(address)
+    .methods.approveRequest(id)
+    .send(({
+      from: accounts[0],
+    }))
+}
 
 async function getCampaignBudgets(address) {
   const accounts = await web3.eth.getAccounts()
@@ -21,7 +30,7 @@ async function getCampaignBudgets(address) {
   let promises = []
   for (let i = 0; i < num_of_budget; i++) {
     promises.push(
-      await theCampaign(address).methods.getRequestSummary(i).call({
+      theCampaign(address).methods.getRequestSummary(i).call({
         from: accounts[0],
       }),
     )
@@ -37,7 +46,9 @@ async function getCampaignBudgets(address) {
       complete: summary[4],
       amount: summary[5],
       total: summary[6],
-      pass: Number(summary[5])/Number(summary[6]) > 0.5
+      pass: Number(summary[5])/Number(summary[6]) > 0.5,
+      index:Number(summary[7]),
+      campaignAddress:summary[8]
     })
   })
   
@@ -272,7 +283,7 @@ async function contribute(eth, campaignAddress, setHash) {
 }
 
 export {
-    addCampaignBudget,
+  addCampaignBudget,
   getCampaignBudgets,
   createCampaign,
   getCampaignAddresses,
@@ -281,4 +292,5 @@ export {
   getCampaign,
   contribute,
   getContributions,
+  approveRequest
 }

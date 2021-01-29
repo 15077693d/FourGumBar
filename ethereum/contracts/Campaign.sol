@@ -85,9 +85,9 @@ contract Campaign {
         address approver = msg.sender;
         if (!approvers[approver]){
              approverAddresses.push(approver);
+             approverCount += 1;
         }
         approvers[approver] = true;
-        approverCount += 1;
         approverContributions[approver]+=msg.value;
     }
 
@@ -128,9 +128,12 @@ contract Campaign {
             address,
             bool,
             uint256,
-            uint256
+            uint256,
+            uint256,
+            address
         )
     {
+        uint256 index = id;
         Request storage request = requests[id];
         return (
             request.name,
@@ -139,7 +142,9 @@ contract Campaign {
             request.recipient,
             request.complete,
             request.approvalCount,
-            approverCount
+            approverCount,
+            index,
+            address(this)
         );
     }
 

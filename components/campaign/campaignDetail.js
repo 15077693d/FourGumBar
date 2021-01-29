@@ -18,7 +18,7 @@ const CampaignDetail = ({ campaign, contributions }) => {
         {minETH} ETH</div>
         </div>
         ,
-        d: <Table className={contribution_table} data={contributions} columns={['地址','金額ETH']}/>,
+        d: <Table key={address} className={contribution_table} data={contributions} columns={['地址','金額ETH']}/>,
         e: <div  style={{height:130}} className={center}>
         <div style={{width:"90%"}} className={special_char}>
         <a href={`https://rinkeby.etherscan.io/address/${manager}`} target="_blank">{manager}</a>
