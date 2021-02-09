@@ -41,7 +41,7 @@ const PayBtn = ({renewContributions,setRecentETH,recentETH, minETH, active, setA
     if (active) {
         return status==="based"?<ProcessingNodes isPayment={true} address={campaignAddress} basedNode={formNode}  status={status}  hash={hash} clickConfirmed={()=>{setStatus("based")}} />
         :<div className={`${pay_pad}`}>
-<ProcessingNodes address={campaignAddress} basedNode={formNode}  isPayment={true} status={status}  hash={hash} clickConfirmed={()=>{setStatus("based");setActive(false);}} />
+<ProcessingNodes loadingSentence={"正在處理你的款項......"} successSentence={"你的款項已過帳到項目！"}  address={campaignAddress} basedNode={formNode}  isPayment={true} status={status}  hash={hash} clickConfirmed={()=>{setStatus("based");setActive(false);}} />
         </div>
     } else {
         return (

@@ -5,11 +5,11 @@ import ProcessingNodes from '../processNodes'
 import useForm from '../../hooks/useForm'
 import { addCampaignBudget } from '../../ethereum/campaign'
 import useProcess from '../../hooks/useProcess'
-const createBudgetForm = ({ appendBudgets, manager, campaignAddress, setPage }) => {
+
+const createBudgetForm = ({latestIndex, appendBudget, manager, campaignAddress, setPage }) => {
     const processData = useProcess()
     const { status, setAddress, hash, setHash, setStatus } = processData
     const finalAddress = processData.address
-
     const { name, amount, address, description, setFormInput, resetFormInputs } = useForm({ name: "", amount: "", address: "", description: "" })
     async function handleSubmit(e) {
         e.preventDefault()
@@ -17,6 +17,8 @@ const createBudgetForm = ({ appendBudgets, manager, campaignAddress, setPage }) 
         try {
             await addCampaignBudget(campaignAddress, { name, value: amount, recipient: address, description }, manager, setHash)
             const budget = {
+                index:latestIndex,
+                campaignAddress:campaignAddress,
                 address: address,
                 amount: "0",
                 complete: false,
@@ -25,7 +27,7 @@ const createBudgetForm = ({ appendBudgets, manager, campaignAddress, setPage }) 
                 item: name,
                 pass: false
             }
-            appendBudgets(budget)
+            appendBudget(budget)
             setStatus("succeed")
             resetFormInputs()
         } catch (error) {
@@ -48,7 +50,7 @@ const createBudgetForm = ({ appendBudgets, manager, campaignAddress, setPage }) 
     return (
         <div className={form_container}>
             <div></div>
-            <ProcessingNodes address={finalAddress} basedNode={formNode} status={status} hash={hash}
+            <ProcessingNodes loadingSentence={"正在提交預算......"} successSentence={"你的預算完成上傳！"}  address={finalAddress} basedNode={formNode} status={status} hash={hash}
                 clickConfirmed={() => { setPage("budgets");setStatus("based"); }} />
             <div></div>
         </div>

@@ -49,23 +49,23 @@ export const BudgetsNode =  ({style, isManager, setPage, handleClickBudget, budg
 }
 
 
-export const AddBudgetNode = ({style, appendBudgets, setPage,manager,campaignAddress }) => {
+export const AddBudgetNode = ({latestIndex, style, appendBudget, setPage,manager,campaignAddress }) => {
     return <div style ={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>增加支岀預算</span>
             <button onClick={() => setPage('budgets')} className={blue_btn}>返回</button>
         </div>
-        <CreateBudgetForm setPage={setPage} appendBudgets={appendBudgets} manager={manager} campaignAddress={campaignAddress}/>
+        <CreateBudgetForm latestIndex={latestIndex} setPage={setPage} appendBudget={appendBudget} manager={manager} campaignAddress={campaignAddress}/>
     </div>
 }
 
 
-export const BudgetDetailNode = ({style, budget, setPage}) => {
+export const BudgetDetailNode = ({style, budget, setPage, addOneVoteOnBudget}) => {
     return <div style ={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>{budget.item}</span>
             <button onClick={() => setPage("budgets")} className={blue_btn}>返回</button>
         </div>
-        <BudgetDetail budget={budget} />
+        <BudgetDetail addOneVoteOnBudget={addOneVoteOnBudget} budget={budget} />
     </div>
 }

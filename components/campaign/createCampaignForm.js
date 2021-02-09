@@ -66,7 +66,7 @@ const CreateCampaignForm = ({ renewCampaigns, handleClickAdd, renewBalance }) =>
                 <span className={`${bold} ${blue}`}>增加項目</span>
                 <button onClick={handleClickAdd} className={blue_btn}>返回</button>
             </div>
-            <ProcessingNodes address={address} basedNode={formNode}  status={status}  hash={hash} clickConfirmed={()=>{setStatus("based");handleClickAdd();}} />
+            <ProcessingNodes loadingSentence={"正在處理你的項目......"} successSentence={"你的項目完成上傳！"} address={address} basedNode={formNode}  status={status}  hash={hash} clickConfirmed={()=>{setStatus("based");handleClickAdd();}} />
             <div></div>
         </div>
     );

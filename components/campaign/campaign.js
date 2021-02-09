@@ -5,18 +5,14 @@ import { campaign_container } from '../../styles/pages/index.module.css'
 import { Router } from '../../routes'
 import { CampaignDetailNode, BudgetsNode, AddBudgetNode, BudgetDetailNode } from './nodes'
 import { getCampaignBudgets } from '../../ethereum/campaign'
+import useBudgets from '../../hooks/useBudgets'
 const Campagin = ({ setSelectedCampaign, campaign, renewCampaign }) => {
     let [active, setActive] = useState(false)
     let [page, setPage] = useState('details')
-    const [budgets, setBudgets] = useState([])
-    const [currectBudget, setCurrentBudget] = useState([])
+    const {currectBudget, setCurrentBudget,budgets,setBudgets,appendBudget,addOneVoteOnBudget} = useBudgets(campaign.approverCount)
     useEffect(async ()=>{
         setBudgets(await getCampaignBudgets(campaign.address))
     },[])
-    function appendBudgets(budget){
-        budget.total = campaign.approverCount
-        setBudgets(budgets.concat(budget))
-    }
     function handleClick() {
         setActive(!active)
     }
@@ -32,12 +28,13 @@ const Campagin = ({ setSelectedCampaign, campaign, renewCampaign }) => {
         setCurrentBudget(budget)
         setPage("budgetDetails")
     }
+    console.log()
     return <div className={campaign_container}>
         {active ? <div onClick={handleClick} className={overlay}></div> : null}
         <CampaignDetailNode style={{display:page==="details"?"":"none"}} setPage={setPage} handleBack={handleBackHome} active={active} campaign={campaign} renewCampaign={renewCampaign} setActive={setActive} />
-        <BudgetsNode style={{display:page==="budgets"?"":"none"}}  setPage={setPage} handleClickBudget={handleClickBudget} budgets={budgets} />
-        <AddBudgetNode style={{display:page==="addBudgets"?"":"none"}} appendBudgets={appendBudgets} setPage={setPage} manager={campaign.manager} campaignAddress={campaign.address}/>
-        <BudgetDetailNode style={{display:page==="budgetDetails"?"":"none"}} campaignAddress={campaign.address} budget={currectBudget} setPage={setPage} />
+        <BudgetsNode  style={{display:page==="budgets"?"":"none"}}  setPage={setPage} handleClickBudget={handleClickBudget} budgets={budgets} />
+        <AddBudgetNode latestIndex={budgets.length} style={{display:page==="addBudgets"?"":"none"}} appendBudget={appendBudget} setPage={setPage} manager={campaign.manager} campaignAddress={campaign.address}/>
+        <BudgetDetailNode addOneVoteOnBudget={addOneVoteOnBudget} style={{display:page==="budgetDetails"?"":"none"}} campaignAddress={campaign.address} budget={currectBudget} setPage={setPage} />
     </div>
 };
 export default Campagin;

@@ -11,7 +11,6 @@ async function getAccountBalance() {
   return ethBalance
 }
 let approveRequest = async (address, id) => {
-  console.log(address)
   const accounts = await web3.eth.getAccounts()
   await theCampaign(address)
     .methods.approveRequest(id)
@@ -46,13 +45,12 @@ async function getCampaignBudgets(address) {
       complete: summary[4],
       amount: summary[5],
       total: summary[6],
-      pass: Number(summary[5])/Number(summary[6]) > 0.5,
       index:Number(summary[7]),
       campaignAddress:summary[8]
     })
   })
   
-  return  summarysObject
+  return summarysObject
 }
 
 async function addCampaignBudget(address,newBudget,manager,setHash){
