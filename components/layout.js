@@ -5,20 +5,28 @@ import { space_between, medium_margin_bottom } from '../styles/common.module.css
 import CreateCampaignForm from './campaign/createCampaignForm'
 import { useEffect, useState } from 'react'
 import useBalance from '../hooks/useBalance'
+import {getAccount} from '../ethereum/campaign'
+import {accountContext} from '../hooks/accountContext'
+import {managerContext} from '../hooks/managerContext'
 const Layout = ({ children, renewCampaigns, _balance }) => {
     const [added, setAdded] = useState(false)
     const { balance, renewBalance } = useBalance(_balance ? _balance : 'XXX')
+    const [ account, setAccount  ] = useState()
+    const [ theManager, setManager  ] = useState()
     function handleClickAdd() {
         setAdded(!added)
     }
     useEffect(() => {
         const getBalance = async () => {
             await renewBalance()
+            setAccount(await getAccount())
         }
         getBalance()
     }, [])
     return (
-        <div className={layout}>
+        <accountContext.Provider value={account}>
+        <managerContext.Provider value={{theManager,setManager}}>
+             <div className={layout}>
             <div style={{ height: "20vh" }}>
                 <div className={`${space_between} ${medium_margin_bottom}`}>
                     <Link route='home'>
@@ -42,6 +50,9 @@ const Layout = ({ children, renewCampaigns, _balance }) => {
                 <CreateCampaignForm renewBalance={renewBalance} renewCampaigns={renewCampaigns} handleClickAdd={handleClickAdd} />
             </div>
         </div>
+        </managerContext.Provider>
+        </accountContext.Provider>
+       
     );
 };
 

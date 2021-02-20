@@ -4,16 +4,30 @@ import factory from '../ethereum/factory'
 
 let theCampaign = (address) =>
   new web3.eth.Contract(JSON.parse(CampaignJson.interface), address)
-async function getAccountBalance() {
+  async function getAccountBalance() {
   const accounts = await web3.eth.getAccounts()
   const weiBalance = await web3.eth.getBalance(accounts[0])
   const ethBalance = await web3.utils.fromWei(weiBalance, 'ether')
   return ethBalance
 }
+let getAccount = async () => {
+  const accounts = await web3.eth.getAccounts()
+  return accounts[0]
+}
+
 let approveRequest = async (address, id) => {
   const accounts = await web3.eth.getAccounts()
   await theCampaign(address)
     .methods.approveRequest(id)
+    .send(({
+      from: accounts[0],
+    }))
+}
+
+let executeRequest = async (address, id) => {
+  const accounts = await web3.eth.getAccounts()
+  await theCampaign(address)
+    .methods.finalizeRequest(id)
     .send(({
       from: accounts[0],
     }))
@@ -281,6 +295,7 @@ async function contribute(eth, campaignAddress, setHash) {
 }
 
 export {
+  getAccount,
   addCampaignBudget,
   getCampaignBudgets,
   createCampaign,
@@ -290,5 +305,6 @@ export {
   getCampaign,
   contribute,
   getContributions,
-  approveRequest
+  approveRequest,
+  executeRequest
 }

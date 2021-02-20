@@ -9,6 +9,15 @@ const useBudgets = (approverCount) => {
         setBudgets(budgets.concat(budget)) 
     }
 
+    const completeBudget = (i) => {
+        let newBudgets = JSON.parse(JSON.stringify(budgets))
+        newBudgets[i].complete = true
+        let newCurrectBudget = JSON.parse(JSON.stringify(currectBudget))
+        newCurrectBudget.complete = true
+        setCurrentBudget(newCurrectBudget)
+        setBudgets(newBudgets) 
+    }
+
     const addOneVoteOnBudget = (index) => {
         let newBudgets = JSON.parse(JSON.stringify(budgets))
         newBudgets[index].amount=Number(newBudgets[index].amount)+1
@@ -24,7 +33,8 @@ const useBudgets = (approverCount) => {
         appendBudget,
         addOneVoteOnBudget,
         currectBudget, 
-        setCurrentBudget
+        setCurrentBudget,
+        completeBudget
     }
 };
 
