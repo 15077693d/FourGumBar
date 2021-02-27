@@ -97,7 +97,6 @@ contract Campaign {
         uint256 value,
         address recipient
     ) public restricted returns (uint256) {
-        require(value < this.balance);
         requests.push(Request(name, _description, value, recipient, false, 0));
         return requests.length;
     }

@@ -258,8 +258,6 @@ async function createCampaign(
         reject(error)
       })
       .on('confirmation', function (confirmationNumber, receipt) {
-        console.log(confirmationNumber)
-        console.log(receipt)
       })
   })
 }

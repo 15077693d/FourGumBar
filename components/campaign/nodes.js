@@ -6,21 +6,12 @@ import { form_container } from '../../styles/components/createCampaignForm.modul
 import EthBar from '../ethBar'
 import CampaignDetail from './campaignDetail'
 import PayBtn from '../payBtn'
-import { getContributions } from '../../ethereum/campaign'
 import BudgetItem from '../budget/budgetItem'
 import CreateBudgetForm from '../budget/createBudgetForm'
 import BudgetDetail from '../budget/budgetDetail'
-
-export const CampaignDetailNode = ({ style,setPage, campaign, renewCampaign, setActive, handleBack, active }) => {
+export const CampaignDetailNode = ({resetBudgets, renewContributions,contributions,isManager, style,setPage, campaign, renewCampaign, setActive, handleBack, active }) => {
     let { category, title, target, minETH, address } = campaign
     const [recentETH, setRecentETH] = useState(campaign.recentETH)
-    const [contributions, setContributions] = useState(null)
-    const renewContributions = () => {
-        getContributions(address).then(_contributions => setContributions(_contributions))
-    }
-    useEffect(() => {
-        renewContributions()
-    }, [])
     return <div style={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>{category}</span>
@@ -30,7 +21,7 @@ export const CampaignDetailNode = ({ style,setPage, campaign, renewCampaign, set
         <div className={`${bold} ${small_margin_bottom}`}>{title}</div>
         <EthBar numerator={recentETH} denominator={target} className={medium_margin_bottom} />
         <CampaignDetail contributions={contributions} campaign={campaign} />
-        <PayBtn renewContributions={renewContributions} recentETH={recentETH} setRecentETH={setRecentETH} renewCampaign={renewCampaign} campaignAddress={address} minETH={Number(minETH)} active={active} setActive={setActive} />
+        {isManager?null:<PayBtn resetBudgets={resetBudgets} renewContributions={renewContributions} recentETH={recentETH} setRecentETH={setRecentETH} renewCampaign={renewCampaign} campaignAddress={address} minETH={Number(minETH)} active={active} setActive={setActive} />}
     </div>
 }
 
@@ -44,7 +35,7 @@ export const BudgetsNode =  ({style, isManager, setPage, handleClickBudget, budg
             {budgets.map((budget,i) =>
                 <BudgetItem key={i} handleClick={() => handleClickBudget(budget)} budget={budget} />)}
         </div>
-        <button onClick={() => setPage('addBudgets')} className={blue_big_btn} >增加預算</button>
+        {isManager?<button onClick={() => setPage('addBudgets')} className={blue_big_btn} >增加預算</button>:null}
     </div>
 }
 
@@ -60,12 +51,12 @@ export const AddBudgetNode = ({latestIndex, style, appendBudget, setPage,manager
 }
 
 
-export const BudgetDetailNode = ({style, budget, setPage, addOneVoteOnBudget, completeBudget}) => {
+export const BudgetDetailNode = ({  isContributor, isManager,style, budget, setPage, addOneVoteOnBudget, completeBudget}) => {
     return <div style ={style} className={`${form_container} ${column_space_between}`}>
         <div className={`${space_between} ${medium_margin_bottom}`}>
             <span className={`${bold} ${blue}`}>{budget.item}</span>
             <button onClick={() => setPage("budgets")} className={blue_btn}>返回</button>
         </div>
-        <BudgetDetail completeBudget={completeBudget} addOneVoteOnBudget={addOneVoteOnBudget} budget={budget} />
+        <BudgetDetail  isContributor={isContributor} isManager={isManager} completeBudget={completeBudget} addOneVoteOnBudget={addOneVoteOnBudget} budget={budget} />
     </div>
 }

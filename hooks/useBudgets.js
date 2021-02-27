@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 const useBudgets = (approverCount) => {
     const [budgets, setBudgets] = useState([])
     const [currectBudget, setCurrentBudget] = useState([])
-    
     const appendBudget = (budget) => {
         budget.total = approverCount
         setBudgets(budgets.concat(budget)) 

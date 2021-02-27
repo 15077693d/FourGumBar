@@ -5,7 +5,7 @@ import { useState } from 'react';
 import useProcess from '../hooks/useProcess' 
 import { contribute } from '../ethereum/campaign'
 import ProcessingNodes from '../components/processNodes'
-const PayBtn = ({renewContributions,setRecentETH,recentETH, minETH, active, setActive, campaignAddress,renewCampaign }) => {
+const PayBtn = ({ renewContributions,setRecentETH,recentETH, minETH, active, setActive, campaignAddress,renewCampaign }) => {
     const { status,hash,setHash,setStatus} = useProcess()
     const [eth, setETH] = useState(minETH)
     async function handleSubmit (e) {

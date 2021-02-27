@@ -3,7 +3,7 @@ function Table({data, columns, className}) {
   // columns = ['c1', 'c2']
   // data = [{'c1':,'c2':},{'c1':,'c2':},{'c1':,'c2':}]
   const columnsNode = columns.map(column => 
-    <th>{column}</th>
+    <th key={column}>{column}</th>
   )
   const dataNode = data.map(item => 
     <tr>
